@@ -1,0 +1,428 @@
+body {
+    background-color: #0A192F; /* 深蓝 */
+    font-family: 'Roboto Mono', monospace;
+    color: #E0E0E0; /* 冷灰色 */
+    /* 模拟数字噪点 */
+    background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Cfilter id="n" x="0" y="0"%3E%3CfeTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100" height="100" filter="url(%23n)" opacity=".07"/%3E%3C/svg%3E');
+}
+
+.card-container-wrapper {
+    display: flex;
+    justify-content: center; /* 水平居中卡片容器 */
+    padding: 2rem;
+}
+
+#card-container { /* Will be used as a class in React component for multiple instances if needed */
+    display: flex;
+    gap: 20px; /* 卡片间距 */
+    overflow-x: auto; /* 水平滚动 */
+    padding: 20px; /* 内边距，防止卡片贴边 */
+    max-width: 100%; /* 确保容器不会超出视口 */
+}
+
+.card {
+    width: 450px;
+    height: 600px;
+    background-color: #1A1A1A; /* 碳黑 */
+    border: 2px solid #00FFFF; /* 赛博蓝边框 */
+    box-shadow: 0 0 15px #00FFFF, 0 0 25px #00FFFF inset; /* 霓虹光效 */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* 内容垂直分布 */
+    overflow: hidden; /* 防止内容溢出 */
+    position: relative; /* 用于绝对定位伪元素 */
+    flex-shrink: 0; /* 防止卡片在flex容器中被压缩 */
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: repeating-linear-gradient(0deg, rgba(0, 255, 255, 0.03), rgba(0, 255, 255, 0.03) 1px, transparent 1px, transparent 3px);
+    pointer-events: none; /* 允许点击穿透 */
+    z-index: 1;
+}
+
+.card-content {
+    position: relative; /* 确保内容在扫描线之上 */
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 字体风格 */
+.font-orbitron { font-family: 'Orbitron', sans-serif; }
+.font-share-tech { font-family: 'Share Tech Mono', monospace; }
+.font-audiowide { font-family: 'Audiowide', cursive; }
+.font-press-start { font-family: 'Press Start 2P', cursive; }
+.font-vt323 { font-family: 'VT323', monospace; }
+
+/* 强调等级 */
+.emphasis-core {
+    font-family: 'Orbitron', 'Press Start 2P', sans-serif;
+    font-weight: 700;
+    color: #FF00FF; /* 霓虹粉 */
+    text-shadow: 0 0 5px #FF00FF, 0 0 10px #FF00FF, 0 0 2px #fff;
+    /* animation: text-flicker-core 3s infinite alternate, text-jitter-slight 0.2s infinite alternate; */
+}
+
+.emphasis-highlight {
+    color: #00FFFF; /* 赛博蓝 */
+    font-family: 'Share Tech Mono', monospace;
+    /* text-decoration: underline; 
+    text-decoration-color: #39FF14; /* 荧光绿下划线 */
+}
+.emphasis-highlight-alt {
+    color: #FFA500; /* 亮橙色 */
+    font-family: 'Share Tech Mono', monospace;
+}
+
+.emphasis-auxiliary {
+    font-family: 'VT323', 'Roboto Mono', monospace;
+    color: #7F8C8D; /* 冷灰色 */
+    font-size: 0.9em;
+}
+.emphasis-auxiliary::before {
+    content: '> ';
+    color: #39FF14; /* 荧光绿 */
+}
+
+/* 故障艺术效果 */
+@keyframes text-flicker-core {
+    0%, 18%, 22%, 25%, 53%, 57%, 100% { text-shadow: 0 0 4px #FF00FF, 0 0 10px #FF00FF, 0 0 1px #fff; opacity: 1; }
+    20%, 24%, 55% { text-shadow: none; opacity: 0.7; }
+}
+
+@keyframes text-jitter-slight {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(0.5px, -0.5px); }
+    50% { transform: translate(-0.5px, 0.5px); }
+    75% { transform: translate(0.5px, 0.5px); }
+    100% { transform: translate(-0.5px, -0.5px); }
+}
+
+/*
+.glitch-lines::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 2px;
+    text-shadow: -1px 0 #39FF14;
+    top: 0;
+    color: #FF00FF;
+    background: transparent;
+    overflow: hidden;
+    clip: rect(0,900px,0,0);
+    animation: noise-anim 2s infinite linear alternate-reverse;
+}
+
+.glitch-lines::before {
+    content: attr(data-text);
+    position: absolute;
+    left: -2px;
+    text-shadow: 1px 0 #00FFFF;
+    top: 0;
+    color: #FF00FF;
+    background: transparent;
+    overflow: hidden;
+    clip: rect(0,900px,0,0);
+    animation: noise-anim-2 3s infinite linear alternate-reverse;
+}
+*/
+
+/*
+@keyframes noise-anim {
+    0% { clip: rect(62px,9999px,60px,0); }
+    5% { clip: rect(30px,9999px,72px,0); }
+    10% { clip: rect(42px,9999px,79px,0); }
+    15% { clip: rect(87px,9999px,99px,0); }
+    20% { clip: rect(16px,9999px,60px,0); }
+    25% { clip: rect(78px,9999px,32px,0); }
+    30% { clip: rect(7px,9999px,6px,0); }
+    35% { clip: rect(8px,9999px,6px,0); }
+    40% { clip: rect(76px,9999px,3px,0); }
+    45% { clip: rect(43px,9999px,37px,0); }
+    50% { clip: rect(1px,9999px,88px,0); }
+    55% { clip: rect(1px,9999px,4px,0); }
+    60% { clip: rect(2px,9999px,85px,0); }
+    65% { clip: rect(4px,9999px,100px,0); }
+    70% { clip: rect(96px,9999px,49px,0); }
+    75% { clip: rect(42px,9999px,9px,0); }
+    80% { clip: rect(10px,9999px,46px,0); }
+    85% { clip: rect(21px,9999px,80px,0); }
+    90% { clip: rect(74px,9999px,3px,0); }
+    95% { clip: rect(95px,9999px,93px,0); }
+    100% { clip: rect(25px,9999px,79px,0); }
+}
+@keyframes noise-anim-2 {
+    0% { clip: rect(12px,9999px,88px,0); }
+    5% { clip: rect(100px,9999px,2px,0); }
+    10% { clip: rect(9px,9999px,29px,0); }
+    15% { clip: rect(23px,9999px,10px,0); }
+    20% { clip: rect(45px,9999px,4px,0); }
+    25% { clip: rect(63px,9999px,65px,0); }
+    30% { clip: rect(60px,9999px,8px,0); }
+    35% { clip: rect(7px,9999px,79px,0); }
+    40% { clip: rect(10px,9999px,5px,0); }
+    45% { clip: rect(83px,9999px,4px,0); }
+    50% { clip: rect(9px,9999px,67px,0); }
+    55% { clip: rect(47px,9999px,16px,0); }
+    60% { clip: rect(40px,9999px,3px,0); }
+    65% { clip: rect(66px,9999px,42px,0); }
+    70% { clip: rect(2px,9999px,78px,0); }
+    75% { clip: rect(3px,9999px,63px,0); }
+    80% { clip: rect(88px,9999px,11px,0); }
+    85% { clip: rect(6px,9999px,71px,0); }
+    90% { clip: rect(8px,9999px,9px,0); }
+    95% { clip: rect(54px,9999px,10px,0); }
+    100% { clip: rect(70px,9999px,35px,0); }
+}
+*/
+
+.card-title {
+    font-size: 1.8em;
+    margin-bottom: 15px;
+    word-break: break-all;
+}
+
+.card-body {
+    flex-grow: 1;
+    overflow-y: auto; /* 内容过多时允许滚动 */
+    font-size: 1em;
+    line-height: 1.6;
+}
+.card-body p, .card-body li {
+    margin-bottom: 10px;
+}
+
+.card-footer {
+    font-size: 0.8em;
+    margin-top: 15px;
+    text-align: right;
+}
+
+/* Card wrapper to keep button with card */
+.card-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center button below card */
+}
+
+.download-btn, .download-all-btn { /* Changed #download-all-btn to class for potential multiple instances or consistent styling */
+    background-color: #00FFFF; /* 赛博蓝 */
+    color: #0A192F; /* 深蓝 */
+    font-family: 'Orbitron', sans-serif;
+    padding: 8px 15px;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-size: 0.9em;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 5px #00FFFF;
+}
+.download-btn:hover, .download-all-btn:hover {
+    background-color: #FF00FF; /* 霓虹粉 */
+    color: #FFFFFF;
+    box-shadow: 0 0 10px #FF00FF, 0 0 15px #FF00FF;
+}
+.download-all-btn { /* Specific styling for a global download button if needed, e.g., centering */
+    display: block;
+    margin: 20px auto; /* 居中 */
+}
+
+/* 简单语法高亮 */
+.code-keyword { color: #FF00FF; } /* 霓虹粉 */
+.code-string { color: #39FF14; } /* 荧光绿 */
+.code-comment { color: #7F8C8D; } /* 冷灰色 */
+.code-variable { color: #00FFFF; } /* 赛博蓝 */
+
+/* 细滚动条，赛博朋克风格 */
+.card-body::-webkit-scrollbar {
+    width: 6px;
+}
+.card-body::-webkit-scrollbar-track {
+    background: #1A1A1A;
+}
+.card-body::-webkit-scrollbar-thumb {
+    background-color: #00FFFF;
+    border-radius: 3px;
+    border: 1px solid #1A1A1A;
+}
+
+/* Tailwind specific overrides or global settings if needed */
+/* For example, ensuring p and m applies correctly in Next.js context */
+body.p-4 { padding: 1rem; }
+body.md\:p-8 { 
+    /* For medium screens and up, apply padding of 2rem. Note: Tailwind's md: prefix is usually handled by its JIT compiler.
+       If using global CSS without Tailwind's processing, this specific media query might be needed.
+       However, if Tailwind is properly set up in Next.js, these classes in JSX will work automatically.
+       This section is more of a placeholder if direct overrides are needed. */
+}
+
+/* Ensure html and body take full height for certain layouts if necessary */
+/* html, body {
+    height: 100%;
+    margin: 0;
+} */
+
+/* --- NEW STYLES START HERE --- */
+
+/* === Apple Notes Style === */
+.card-style-apple-notes .card {
+    /* Override cyberpunk .card styles */
+    background-color: #FEF9E7; /* Very light yellow, like Apple Notes */
+    border: 1px solid #EAEAEA; /* Subtle border */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Softer shadow */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #333333; /* Dark gray text */
+    /* Reset cyberpunk specific pseudo-elements if any */
+}
+
+.card-style-apple-notes .card::before { /* Reset cyberpunk scanlines */
+    background-image: none;
+}
+
+.card-style-apple-notes .card-page-header,
+.card-style-apple-notes .card-page-footer {
+    color: #888888; /* Lighter gray for headers/footers */
+    border-color: #DDDDDD; /* Lighter border color */
+    font-size: 0.85em;
+    padding: 8px 15px; /* Adjust padding */
+}
+
+.card-style-apple-notes .card-title {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-weight: 600; /* Bold */
+    color: #111111; /* Near black for titles */
+    font-size: 1.5em; /* Adjust size */
+    text-shadow: none; /* Remove cyberpunk text-shadow */
+    margin-bottom: 10px;
+}
+
+.card-style-apple-notes .card-content .emphasis-highlight-alt, /* Subtitle for Apple Notes */
+.card-style-apple-notes .card-content .text-purple-300 /* Generic subtitle class used in news type */ {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #555555; /* Medium gray for subtitle */
+    font-size: 1.1em;
+    font-weight: normal;
+    margin-top: 2px;
+    text-shadow: none;
+}
+
+.card-style-apple-notes .card-body p,
+.card-style-apple-notes .card-body li {
+    font-size: 1em;
+    line-height: 1.5;
+    color: #333333;
+    margin-bottom: 8px;
+}
+
+.card-style-apple-notes .emphasis-core { /* Reset cyberpunk emphasis */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    color: #111111;
+    text-shadow: none;
+}
+.card-style-apple-notes .emphasis-highlight {
+    color: #007AFF; /* Apple blue for highlights */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.card-style-apple-notes .emphasis-auxiliary {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #AAAAAA;
+    font-size: 0.8em;
+}
+.card-style-apple-notes .emphasis-auxiliary::before {
+    content: '// '; /* More subtle prefix */
+    color: #CCCCCC;
+}
+
+
+/* === Girly Journal Style === */
+.card-style-girly-journal .card {
+    background-color: #FFF0F5; /* Lavender blush - a soft pink */
+    border: 2px dashed #FFB6C1; /* Light pink dashed border */
+    box-shadow: 0 0 8px rgba(255, 182, 193, 0.5); /* Soft pink shadow */
+    font-family: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', sans-serif; /* Cute/handwritten fonts */
+    color: #774D8E; /* Deep lilac text */
+    border-radius: 10px; /* Rounded corners */
+}
+
+.card-style-girly-journal .card::before { /* Reset cyberpunk scanlines */
+    background-image: none;
+}
+
+.card-style-girly-journal .card-page-header,
+.card-style-girly-journal .card-page-footer {
+    color: #C77E8F; /* Dusty rose */
+    border-color: #FFC0CB; /* Pink border */
+    font-size: 0.9em;
+    font-style: italic;
+    padding: 8px 15px;
+    text-align: center;
+}
+
+.card-style-girly-journal .card-title {
+    font-family: 'Pacifico', 'Comic Sans MS', cursive; /* More decorative font for titles */
+    font-weight: normal;
+    color: #D96D8A; /* Stronger pink for titles */
+    font-size: 1.7em;
+    text-shadow: 1px 1px 2px #FFFFFF;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.card-style-girly-journal .card-content .emphasis-highlight-alt, /* Subtitle */
+.card-style-girly-journal .card-content .text-purple-300 {
+    font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+    color: #9B72AA; /* Medium purple for subtitle */
+    font-size: 1.2em;
+    text-align: center;
+    margin-top: 3px;
+    text-shadow: none;
+}
+
+.card-style-girly-journal .card-body p,
+.card-style-girly-journal .card-body li {
+    font-size: 1em;
+    line-height: 1.6;
+    color: #774D8E;
+    margin-bottom: 10px;
+}
+
+/* Placeholder for cute list bullets or decorative elements */
+.card-style-girly-journal .card-body ul {
+    list-style-type: none; /* Remove default bullets */
+    padding-left: 0;
+}
+.card-style-girly-journal .card-body li::before {
+    content: '♡ '; /* Heart bullet */
+    color: #FFB6C1; /* Light pink */
+    margin-right: 5px;
+}
+
+.card-style-girly-journal .emphasis-core { 
+    font-family: 'Pacifico', 'Comic Sans MS', cursive;
+    color: #D96D8A;
+    text-shadow: 1px 1px 1px #fff;
+}
+.card-style-girly-journal .emphasis-highlight {
+    color: #87CEEB; /* Sky blue for highlights */
+    font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+    font-weight: bold;
+}
+.card-style-girly-journal .emphasis-auxiliary {
+    font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+    color: #B08BBB; /* Lighter purple */
+    font-size: 0.85em;
+    font-style: italic;
+}
+.card-style-girly-journal .emphasis-auxiliary::before {
+    content: '✨ '; /* Sparkle prefix */
+    color: #FFD700; /* Gold */
+}
