@@ -1,0 +1,382 @@
+/* Apple Notes风格的CSS样式 */
+:root {
+  --apple-bg: #f5f5f7;
+  --apple-white: #ffffff;
+  --apple-grey-100: #f2f2f2;
+  --apple-grey-200: #e5e5e5;
+  --apple-grey-300: #d1d1d6;
+  --apple-grey-500: #86868b;
+  --apple-grey-700: #515154;
+  --apple-text: #1d1d1f;
+  --apple-blue: #0071e3;
+  --apple-blue-dark: #0061c9;
+  --apple-red: #ff3b30;
+  --apple-yellow: #ffcc00;
+  --apple-green: #34c759;
+  
+  --system-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --border-radius: 10px;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --transition: all 0.2s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--system-font);
+  background-color: var(--apple-bg);
+  color: var(--apple-text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 主容器布局 */
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 顶部导航栏 */
+.app-header {
+  background-color: var(--apple-white);
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--apple-grey-200);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-sm);
+}
+
+.app-header h1 {
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--apple-text);
+}
+
+.style-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.style-selector label {
+  font-size: 14px;
+  color: var(--apple-grey-700);
+  font-weight: 500;
+}
+
+.style-selector select {
+  background-color: var(--apple-white);
+  border: 1px solid var(--apple-grey-300);
+  padding: 8px 12px;
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  color: var(--apple-text);
+  outline: none;
+  transition: var(--transition);
+}
+
+.style-selector select:focus {
+  border-color: var(--apple-blue);
+  box-shadow: 0 0 0 2px rgba(0, 113, 227, 0.2);
+}
+
+/* 主内容区域 */
+.app-content {
+  flex: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 24px;
+}
+
+/* 标签导航 */
+.tab-navigation {
+  display: flex;
+  margin-bottom: 24px;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  background-color: var(--apple-grey-100);
+  padding: 4px;
+}
+
+.tab-button {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--apple-grey-700);
+  cursor: pointer;
+  border-radius: 8px;
+  transition: var(--transition);
+}
+
+.tab-button.active {
+  background-color: var(--apple-white);
+  color: var(--apple-text);
+  box-shadow: var(--shadow-sm);
+}
+
+.tab-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 输入面板 */
+.input-panel, .edit-panel {
+  background-color: var(--apple-white);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.input-container {
+  padding: 24px;
+}
+
+.input-container h2 {
+  font-size: 18px;
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+
+.text-input {
+  width: 100%;
+  height: 300px;
+  padding: 16px;
+  border: 1px solid var(--apple-grey-300);
+  border-radius: var(--border-radius);
+  font-family: var(--system-font);
+  font-size: 14px;
+  resize: vertical;
+  outline: none;
+  transition: var(--transition);
+}
+
+.text-input:focus {
+  border-color: var(--apple-blue);
+  box-shadow: 0 0 0 2px rgba(0, 113, 227, 0.2);
+}
+
+.format-guide {
+  margin-top: 16px;
+  padding: 16px;
+  background-color: var(--apple-grey-100);
+  border-radius: var(--border-radius);
+}
+
+.format-guide h3 {
+  font-size: 15px;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.format-guide ul {
+  list-style-type: none;
+  font-size: 13px;
+  color: var(--apple-grey-700);
+}
+
+.format-guide li {
+  margin-bottom: 8px;
+}
+
+.format-guide code {
+  background-color: rgba(0, 113, 227, 0.1);
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-family: Menlo, Monaco, monospace;
+  font-size: 12px;
+  color: var(--apple-blue);
+}
+
+.format-guide strong {
+  font-weight: 600;
+}
+
+/* 编辑面板 */
+.edit-panel {
+  padding: 24px;
+}
+
+.edit-panel h2 {
+  font-size: 18px;
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+
+.segments-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.segment-card {
+  background-color: var(--apple-white);
+  border: 1px solid var(--apple-grey-200);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.segment-header {
+  padding: 12px 16px;
+  background-color: var(--apple-grey-100);
+  border-bottom: 1px solid var(--apple-grey-200);
+}
+
+.segment-header h3 {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--apple-grey-700);
+}
+
+.segment-form {
+  padding: 16px;
+}
+
+.form-group {
+  margin-bottom: 12px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 13px;
+  color: var(--apple-grey-700);
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--apple-grey-300);
+  border-radius: 8px;
+  font-family: var(--system-font);
+  font-size: 14px;
+  outline: none;
+  transition: var(--transition);
+}
+
+.form-group textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--apple-blue);
+  box-shadow: 0 0 0 2px rgba(0, 113, 227, 0.2);
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  text-align: center;
+}
+
+.empty-icon {
+  margin-bottom: 16px;
+  color: var(--apple-grey-300);
+}
+
+.empty-state p {
+  margin-bottom: 16px;
+  color: var(--apple-grey-500);
+  font-size: 14px;
+}
+
+/* 按钮样式 */
+.primary-button,
+.secondary-button {
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  border: none;
+  outline: none;
+  margin-top: 16px;
+}
+
+.primary-button {
+  background-color: var(--apple-blue);
+  color: white;
+}
+
+.primary-button:hover {
+  background-color: var(--apple-blue-dark);
+}
+
+.primary-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.secondary-button {
+  background-color: var(--apple-grey-100);
+  color: var(--apple-text);
+}
+
+.secondary-button:hover {
+  background-color: var(--apple-grey-200);
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.action-buttons button {
+  flex: 1;
+  margin-top: 0;
+}
+
+/* 页脚 */
+.app-footer {
+  padding: 16px 24px;
+  text-align: center;
+  color: var(--apple-grey-500);
+  font-size: 13px;
+  background-color: var(--apple-white);
+  border-top: 1px solid var(--apple-grey-200);
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .segments-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .app-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  
+  .style-selector {
+    width: 100%;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+} 

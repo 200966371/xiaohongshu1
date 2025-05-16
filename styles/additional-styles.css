@@ -1,0 +1,279 @@
+/* 极简现代风格 */
+.card-style-minimalist .card {
+  background-color: #ffffff;
+  border: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  font-family: 'Inter', sans-serif;
+  color: #333333;
+  border-radius: 2px;
+  padding: 25px;
+}
+
+.card-style-minimalist .card-page-header {
+  color: #888888;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 10px 5px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.card-style-minimalist .card-page-footer {
+  color: #888888;
+  font-size: 12px;
+  padding: 10px 5px;
+  border-top: 1px solid #f0f0f0;
+  text-align: right;
+}
+
+.card-style-minimalist .card-title {
+  font-weight: 600;
+  color: #111111;
+  font-size: 1.5em;
+  letter-spacing: -0.5px;
+  margin-top: 20px;
+}
+
+.card-style-minimalist blockquote {
+  border-left: 2px solid #e0e0e0;
+  padding-left: 15px;
+  color: #555555;
+  font-style: normal;
+  margin: 15px 0;
+}
+
+.card-style-minimalist .body-comment {
+  color: #9e9e9e;
+  font-style: italic;
+}
+
+/* 暗夜模式风格 */
+.card-style-dark-mode .card {
+  background-color: #121212;
+  color: #e0e0e0;
+  border: 1px solid #333333;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  font-family: 'Roboto', sans-serif;
+  border-radius: 8px;
+}
+
+.card-style-dark-mode .card-page-header {
+  color: #9e9e9e;
+  font-size: 0.8em;
+  border-bottom: 1px solid #333333;
+  padding: 12px 15px;
+}
+
+.card-style-dark-mode .card-page-footer {
+  color: #9e9e9e;
+  font-size: 0.8em;
+  border-top: 1px solid #333333;
+  padding: 12px 15px;
+  text-align: right;
+}
+
+.card-style-dark-mode .card-title {
+  color: #ffffff;
+  font-size: 1.6em;
+  font-weight: 500;
+}
+
+.card-style-dark-mode blockquote {
+  border-left: 3px solid #bb86fc;
+  background-color: rgba(187, 134, 252, 0.1);
+  padding: 10px 15px;
+  color: #bb86fc;
+  margin: 10px 0;
+}
+
+.card-style-dark-mode .body-comment {
+  color: #03dac5;
+}
+
+.card-style-dark-mode .inline-code {
+  background-color: #333333;
+  color: #03dac5;
+  border-radius: 4px;
+  padding: 2px 4px;
+  font-family: 'Fira Code', monospace;
+}
+
+/* 复古打字机风格 */
+.card-style-vintage-typewriter .card {
+  background-color: #f8f5e6;
+  color: #3a3a3a;
+  border: none;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  font-family: 'Courier Prime', 'Courier New', monospace;
+  border-radius: 0;
+  padding: 25px 20px;
+  background-image: 
+    linear-gradient(90deg, rgba(217, 205, 173, 0.2) 1px, transparent 1px),
+    linear-gradient(rgba(217, 205, 173, 0.2) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.card-style-vintage-typewriter .card-page-header {
+  color: #6d4c41;
+  font-size: 0.9em;
+  border-bottom: 1px dashed #c8b99e;
+  padding: 8px 0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.card-style-vintage-typewriter .card-page-footer {
+  color: #6d4c41;
+  font-size: 0.9em;
+  border-top: 1px dashed #c8b99e;
+  padding: 8px 0;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.card-style-vintage-typewriter .card-title {
+  color: #3e2723;
+  font-size: 1.8em;
+  text-decoration: underline;
+  font-weight: bold;
+  margin: 10px 0;
+  text-align: center;
+}
+
+.card-style-vintage-typewriter blockquote {
+  border-left: 3px double #a1887f;
+  padding: 5px 15px;
+  color: #5d4037;
+  font-style: italic;
+}
+
+.card-style-vintage-typewriter .body-comment {
+  color: #795548;
+  font-style: italic;
+  text-decoration: underline;
+}
+
+/* 水彩艺术风格 */
+.card-style-watercolor .card {
+  background-color: #ffffff;
+  border: none;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  font-family: 'Nunito', sans-serif;
+  color: #4a4a4a;
+  border-radius: 15px;
+  background-image: linear-gradient(120deg, rgba(244, 207, 224, 0.4) 0%, rgba(206, 229, 245, 0.4) 100%);
+  padding: 20px;
+}
+
+.card-style-watercolor .card::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  bottom: -5px;
+  left: -5px;
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23baa5ff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+  z-index: -1;
+  opacity: 0.8;
+  border-radius: 15px;
+}
+
+.card-style-watercolor .card-page-header {
+  color: #9c88af;
+  font-size: 0.85em;
+  font-weight: 600;
+  padding: 10px 5px;
+  border-bottom: 1px solid rgba(156, 136, 175, 0.3);
+}
+
+.card-style-watercolor .card-page-footer {
+  color: #9c88af;
+  font-size: 0.85em;
+  padding: 10px 5px;
+  border-top: 1px solid rgba(156, 136, 175, 0.3);
+  text-align: right;
+}
+
+.card-style-watercolor .card-title {
+  font-family: 'Dancing Script', cursive;
+  color: #6a4c93;
+  font-size: 2em;
+  text-align: center;
+  margin: 15px 0;
+}
+
+.card-style-watercolor blockquote {
+  border-left: 3px solid #c9a8d9;
+  background-color: rgba(201, 168, 217, 0.1);
+  padding: 10px 15px;
+  color: #6a4c93;
+  font-style: italic;
+  border-radius: 0 8px 8px 0;
+}
+
+.card-style-watercolor .body-comment {
+  color: #7d70ba;
+  font-style: italic;
+}
+
+/* 日式和风风格 */
+.card-style-japanese .card {
+  background-color: #fcfaf2;
+  color: #333333;
+  border: 1px solid #e5e1d8;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  font-family: 'Noto Sans JP', sans-serif;
+  border-radius: 0;
+}
+
+.card-style-japanese .card-page-header {
+  color: #72675a;
+  font-size: 0.85em;
+  padding: 15px;
+  border-bottom: 1px solid #e5e1d8;
+  text-align: right;
+}
+
+.card-style-japanese .card-page-footer {
+  color: #72675a;
+  font-size: 0.85em;
+  padding: 15px;
+  border-top: 1px solid #e5e1d8;
+  text-align: right;
+}
+
+.card-style-japanese .card-content {
+  background-image: linear-gradient(#f5f3ed 1px, transparent 1px);
+  background-size: 100% 30px;
+  padding: 15px;
+}
+
+.card-style-japanese .card-title {
+  color: #434343;
+  font-size: 1.5em;
+  font-weight: 500;
+  border-bottom: 2px solid #c14a4a;
+  padding-bottom: 5px;
+  display: inline-block;
+  margin-bottom: 15px;
+}
+
+.card-style-japanese blockquote {
+  border-left: 3px solid #c14a4a;
+  padding: 5px 15px;
+  color: #574f45;
+  background-color: rgba(193, 74, 74, 0.03);
+}
+
+.card-style-japanese .body-comment {
+  color: #96836e;
+  font-style: normal;
+}
+
+.card-style-japanese .inline-code {
+  background-color: #f1efe7;
+  color: #c14a4a;
+  border: 1px solid #e5e1d8;
+  font-family: 'IBM Plex Mono', monospace;
+} 

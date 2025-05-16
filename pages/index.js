@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import ImageGenerator from '../components/ImageGenerator';
-// import CardInputForm from '../components/CardInputForm'; // Temporarily hide
+import React, { useState } from 'react';
+import { useRouter } from 'next/router';
+import Head from 'next/head';
 
 const availableStyles = [
-  { value: 'cyberpunk', label: '默认风格 (赛博朋克)' },
-  { value: 'apple-notes', label: '苹果备忘录' },
+  { value: 'apple-notes', label: '苹果备忘录 (推荐)' },
+  { value: 'cyberpunk', label: '赛博朋克' },  
   { value: 'girly-journal', label: '少女手账本' },
 ];
 
@@ -58,15 +58,12 @@ const defaultBulkText = `
 `;
 
 const HomePage = () => {
-  const [cards, setCards] = useState([]);
+  const router = useRouter();
   const [bulkText, setBulkText] = useState(defaultBulkText);
-  const [splitSegments, setSplitSegments] = useState([]);
   const [editingSegments, setEditingSegments] = useState([]);
-  const [selectedStyle, setSelectedStyle] = useState(availableStyles[0].value); // Default to first style
-
-  // const handleAddCard = (newCard) => { // Original handler, may be adapted or removed
-  //   setCards(prevCards => [...prevCards, newCard]);
-  // };
+  const [selectedStyle, setSelectedStyle] = useState(availableStyles[0].value);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [activeTab, setActiveTab] = useState('input'); // 'input' or 'edit'
 
   const handleBulkTextChange = (event) => {
     setBulkText(event.target.value);
@@ -103,18 +100,21 @@ const HomePage = () => {
         mainTitle = trimmedLine.substring(2).trim();
         processedLines[i] = true;
         mainTitleFound = true;
-      } else if (!mainTitleFound && trimmedLine.startsWith('#')) { // Handle '#' without space
+      } else if (!mainTitleFound && trimmedLine.startsWith('#')) {
         mainTitle = trimmedLine.substring(1).trim();
         processedLines[i] = true;
         mainTitleFound = true;
       }
-      // Subtitle check needs to be careful not to misinterpret markdown headers in body
-      // For now, let's assume subtitle is also a primary structural element like mainTitle
+      else if (!subtitleFound && trimmedLine.startsWith('副标题：')) {
+        subtitle = trimmedLine.substring('副标题：'.length).trim();
+        processedLines[i] = true;
+        subtitleFound = true;
+      } 
       else if (!subtitleFound && trimmedLine.startsWith('### ')) {
         subtitle = trimmedLine.substring(4).trim();
         processedLines[i] = true;
         subtitleFound = true;
-      } else if (!subtitleFound && trimmedLine.startsWith('###')) { // Handle '###' without space
+      } else if (!subtitleFound && trimmedLine.startsWith('###')) {
         subtitle = trimmedLine.substring(3).trim();
         processedLines[i] = true;
         subtitleFound = true;
@@ -130,11 +130,11 @@ const HomePage = () => {
 
     return {
       id: id || `segment-${Date.now()}`,
-      rawText: segmentText, // Store original for reference if needed
+      rawText: segmentText,
       pageHeader,
       mainTitle,
       subtitle,
-      body: bodyContentLines.join('\n').trimStart(), // Keep leading space within lines, but trim start of whole body
+      body: bodyContentLines.join('\n').trimStart(),
       pageFooter,
     };
   };
@@ -143,7 +143,7 @@ const HomePage = () => {
     const rawSegments = bulkText.split(/\n---\n|\n---\s*$/gm).map(s => s.trim()).filter(s => s);
     const parsedSegments = rawSegments.map((seg, index) => parseSegmentContent(seg, `segment-${index}-${Date.now()}`));
     setEditingSegments(parsedSegments);
-    setCards([]);
+    setActiveTab('edit');
   };
 
   const handleSegmentFieldChange = (segmentIndex, fieldName, newValue) => {
@@ -156,20 +156,19 @@ const HomePage = () => {
   };
 
   const generateCardData = (segment, index, totalSegments) => {
-    let cardTypeDetermination = 'detail'; // default type
+    let cardTypeDetermination = 'detail';
     if (index === 0) cardTypeDetermination = 'cover';
-    if (index === totalSegments - 1 && totalSegments > 1) cardTypeDetermination = 'footerCard'; // Renamed to avoid conflict with segment.pageFooter
+    if (index === totalSegments - 1 && totalSegments > 1) cardTypeDetermination = 'footerCard';
 
-    // Base structure from parsed segment
     const cardBase = {
       id: `generated-card-${segment.id}-${Date.now()}`,
       title: segment.mainTitle || `卡片 ${index + 1}`,
       subtitle: segment.subtitle,
       pageHeader: segment.pageHeader,
-      pageFooter: segment.pageFooter, // This is the parsed pageFooter from segment
+      pageFooter: segment.pageFooter,
       body: segment.body.split('\n').map(line => ({ type: 'p', text: line.trim() })).filter(p => p.text),
       cardIndexInfo: `卡片 ${index + 1} / ${totalSegments}`,
-      style: selectedStyle, // Add selected style to card data
+      style: selectedStyle,
     };
     
     if (cardBase.body.length === 0 && (segment.mainTitle || segment.subtitle)) {
@@ -178,19 +177,16 @@ const HomePage = () => {
         cardBase.body = [{ type: 'p', text: '(本段无正文内容)' }];
     }
 
-    // Adapt to existing ImageGenerator types or define new ones
     switch (cardTypeDetermination) {
       case 'cover':
         return {
           ...cardBase,
-          type: 'alert', // Example: using 'alert' style for cover
-          // 'alert' specific fields if any, e.g., subtitle can be mapped to card.subtitle
+          type: 'alert',
         };
-      case 'footerCard': // This is the card that is the last in sequence
+      case 'footerCard':
         return {
           ...cardBase,
-          type: 'transmission_end', // Example: using 'transmission_end' for the last card
-          // 'transmission_end' might use title for bodyTextP1, body for bodyTextP2 etc.
+          type: 'transmission_end',
           bodyTextP1: segment.mainTitle || '传输结束',
           bodyTextP2: segment.subtitle,
           bodyTextP3: segment.body || '所有数据流已归档。',
@@ -199,148 +195,205 @@ const HomePage = () => {
       default:
         return {
           ...cardBase,
-          type: 'news', // Example: using 'news' for detail cards
+          type: 'news',
           fileInfo: segment.pageHeader || `片段 ${index + 1}`,
-          date: new Date().toLocaleDateString(), 
+          date: new Date().toLocaleDateString(),
         };
     }
   };
 
   const handleGeneratePreviews = () => {
-    const generatedCards = editingSegments.map((segment, index) =>
-      generateCardData(segment, index, editingSegments.length)
-    );
-    setCards(generatedCards);
+    setIsProcessing(true);
+    try {
+      const generatedCards = editingSegments.map((segment, index) =>
+        generateCardData(segment, index, editingSegments.length)
+      );
+      
+      localStorage.setItem('previewCards', JSON.stringify(generatedCards));
+      router.push('/preview');
+    } catch (error) {
+      console.error('Error generating cards:', error);
+      setIsProcessing(false);
+      alert('生成卡片时发生错误，请重试。');
+    }
   };
   
-  const handleClearCard = (cardId) => {
-    setCards(prevCards => prevCards.filter(card => card.id !== cardId));
-  };
-
   return (
-    <div className="container mx-auto px-4 py-8">
-      <header className="text-center mb-10">
-        <h1 className="font-orbitron text-4xl md:text-5xl text-pink-500">
-          小红书图卡生成工具
-        </h1>
-      </header>
+    <>
+      <Head>
+        <title>小红书图卡生成工具</title>
+        <meta name="description" content="生成小红书风格的图文卡片" />
+      </Head>
       
-      <main>
-        {/* <CardInputForm onAddCard={handleAddCard} /> // Temporarily hidden */}
+      <div className="app-container">
+        <header className="app-header">
+          <h1>小红书图卡生成工具</h1>
+        </header>
         
-        <div className="mb-8 p-4 bg-gray-800/50 rounded-lg shadow-md">
-          <label htmlFor="style-selector" className="block text-xl font-orbitron text-cyan-400 mb-3 text-center md:text-left">选择图卡风格:</label>
-          <select 
-            id="style-selector"
-            value={selectedStyle}
-            onChange={(e) => setSelectedStyle(e.target.value)}
-            className="w-full md:w-1/2 lg:w-1/3 p-3 bg-gray-700 border border-purple-500 rounded-md text-gray-200 focus:ring-2 focus:ring-pink-500 text-lg"
-          >
-            {availableStyles.map(style => (
-              <option key={style.value} value={style.value}>
-                {style.label}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="flex flex-col md:flex-row md:space-x-6 lg:space-x-8 mb-8">
-          {/* Left Column: Bulk Input */}
-          <div className="md:w-1/2 mb-8 md:mb-0">
-            <h2 className="font-orbitron text-2xl text-pink-400 mb-4 text-center md:text-left">1. 粘贴完整内容</h2>
-            <textarea
-              className="w-full h-64 md:h-96 lg:h-[calc(40rem)] p-4 bg-gray-800 border border-cyan-500 rounded-md text-gray-200 focus:ring-2 focus:ring-pink-500 focus:border-pink-500 placeholder-gray-500"
-              value={bulkText}
-              onChange={handleBulkTextChange}
-              placeholder="在此处粘贴您的完整文本内容..."
-            />
-            {/* Instructions Area */}
-            <div className="mt-3 p-3 bg-gray-800 border border-dashed border-cyan-700/70 rounded-md text-sm text-gray-300">
-              <h4 className="font-semibold text-cyan-400 mb-2">内容拆分与字段识别规则:</h4>
-              <ul className="list-disc list-inside space-y-1 text-xs">
-                <li><strong>卡片分隔:</strong> 使用三个连续减号 <code>---</code> (独占一行) 分隔不同卡片。</li>
-                <li><strong>页眉:</strong> 以 <code>页眉：</code> (中文冒号) 开头，独占一行。 <span className="text-gray-400">(例: <code>页眉：每日情报</code>)</span></li>
-                <li><strong>页脚:</strong> 以 <code>页脚：</code> (中文冒号) 开头，独占一行。 <span className="text-gray-400">(例: <code>页脚：来源 - 节点X</code>)</span></li>
-                <li><strong>主标题:</strong> 以 <code>#</code> 或 <code>#&nbsp;</code> 开头，独占一行。 <span className="text-gray-400">(例: <code># 我的主标题</code>)</span></li>
-                <li><strong>副标题:</strong> 以 <code>###</code> 或 <code>###&nbsp;</code> 开头，独占一行。 <span className="text-gray-400">(例: <code>### 我的副标题</code>)</span></li>
-                <li><strong>正文:</strong> 除以上特定行外，其余为正文。</li>
-              </ul>
-            </div>
-            <button
-              onClick={handleSplitText}
-              className="mt-4 w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 px-6 rounded-md transition duration-150 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-opacity-75"
+        <main className="app-content">
+          <div className="tab-navigation">
+            <button 
+              className={`tab-button ${activeTab === 'input' ? 'active' : ''}`}
+              onClick={() => setActiveTab('input')}
             >
-              拆分内容
+              1. 输入文本
+            </button>
+            <button 
+              className={`tab-button ${activeTab === 'edit' ? 'active' : ''}`}
+              onClick={() => setActiveTab('edit')}
+              disabled={editingSegments.length === 0}
+            >
+              2. 编辑卡片
             </button>
           </div>
-
-          {/* Right Column: Editing Segments */}
-          <div className="md:w-1/2">
-            {editingSegments.length > 0 && (
-              <div className="h-full flex flex-col">
-                <h2 className="font-orbitron text-2xl text-pink-400 mb-4 text-center md:text-left">2. 审核并编辑各卡片内容</h2>
-                <div className="flex-grow space-y-3 overflow-y-auto pr-1 md:max-h-[calc(40rem_+_2.75rem)]"> 
-                  {editingSegments.map((segment, index) => {
-                    let segmentType = "详情页";
-                    if (index === 0) segmentType = "封面页";
-                    if (index === editingSegments.length - 1 && editingSegments.length > 1) segmentType = "结尾页";
-                    
-                    return (
-                      <div key={segment.id} className="p-3 border border-purple-600 rounded-lg bg-gray-800/70 shadow-lg">
-                        <h3 className="font-semibold text-pink-400 mb-2 text-md">{segmentType} (卡片 {index + 1} - {availableStyles.find(s => s.value === selectedStyle)?.label || selectedStyle}):</h3>
-                        
-                        <label className="block text-xs font-medium text-cyan-400 mb-0.5">页眉:</label>
-                        <input type="text" value={segment.pageHeader} onChange={(e) => handleSegmentFieldChange(index, 'pageHeader', e.target.value)} placeholder="页眉内容 (可选)" className="w-full p-1.5 mb-2 bg-gray-700 border border-purple-400 rounded-md text-gray-200 text-sm focus:ring-1 focus:ring-pink-400" />
-                        
-                        <label className="block text-xs font-medium text-cyan-400 mb-0.5">主标题:</label>
-                        <input type="text" value={segment.mainTitle} onChange={(e) => handleSegmentFieldChange(index, 'mainTitle', e.target.value)} placeholder="主标题 (由 '#' 解析)" className="w-full p-1.5 mb-2 bg-gray-700 border border-purple-400 rounded-md text-gray-200 text-sm focus:ring-1 focus:ring-pink-400" />
-                        
-                        <label className="block text-xs font-medium text-cyan-400 mb-0.5">副标题:</label>
-                        <input type="text" value={segment.subtitle} onChange={(e) => handleSegmentFieldChange(index, 'subtitle', e.target.value)} placeholder="副标题 (由 '###' 解析)" className="w-full p-1.5 mb-2 bg-gray-700 border border-purple-400 rounded-md text-gray-200 text-sm focus:ring-1 focus:ring-pink-400" />
-                        
-                        <label className="block text-xs font-medium text-cyan-400 mb-0.5">正文:</label>
-                        <textarea
-                          className="w-full h-36 p-2 bg-gray-700 border border-purple-400 rounded-md text-gray-200 text-sm focus:ring-1 focus:ring-pink-400 placeholder-gray-500"
-                          value={segment.body}
-                          onChange={(e) => handleSegmentFieldChange(index, 'body', e.target.value)}
-                          placeholder="卡片的主要内容..."
-                        />
-                        
-                        <label className="block text-xs font-medium text-cyan-400 mt-1.5 mb-0.5">页脚:</label>
-                        <input type="text" value={segment.pageFooter} onChange={(e) => handleSegmentFieldChange(index, 'pageFooter', e.target.value)} placeholder="页脚内容 (可选)" className="w-full p-1.5 bg-gray-700 border border-purple-400 rounded-md text-gray-200 text-sm focus:ring-1 focus:ring-pink-400" />
-                      </div>
-                    );
-                  })}
+          
+          {activeTab === 'input' ? (
+            <div className="input-panel">
+              <div className="input-container">
+                <h2>输入内容</h2>
+                <textarea
+                  className="text-input"
+                  value={bulkText}
+                  onChange={handleBulkTextChange}
+                  placeholder="在此处粘贴您的完整文本内容..."
+                />
+                
+                <div className="format-guide">
+                  <h3>内容格式说明</h3>
+                  <ul>
+                    <li><strong>卡片分隔:</strong> 使用 <code>---</code> 分隔不同卡片</li>
+                    <li><strong>页眉:</strong> 以 <code>页眉：</code> 开头的行</li>
+                    <li><strong>页脚:</strong> 以 <code>页脚：</code> 开头的行</li>
+                    <li><strong>主标题:</strong> 以 <code>#</code> 开头的行</li>
+                    <li><strong>副标题:</strong> 以 <code>###</code> 或 <code>副标题：</code> 开头的行</li>
+                    <li><strong>正文:</strong> 其他所有内容</li>
+                  </ul>
                 </div>
+                
                 <button
-                  onClick={handleGeneratePreviews}
-                  className="mt-4 w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 px-6 rounded-md transition duration-150 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-75 shrink-0"
+                  className="primary-button"
+                  onClick={handleSplitText}
                 >
-                  生成卡片预览
+                  拆分内容并编辑
                 </button>
               </div>
-            )}
-            {editingSegments.length === 0 && (
-                <div className="h-full flex flex-col items-center justify-center p-4 border-2 border-dashed border-gray-600 rounded-md bg-gray-800/50 md:min-h-[calc(40rem_+_2.75rem)]">
-                    <p className="text-gray-400 text-center font-share-tech text-lg">请先在左侧粘贴内容并点击"拆分内容"。</p>
-                    <p className="text-gray-500 text-center mt-1 text-sm">拆分后的内容片段将在此处显示以供编辑。</p>
+            </div>
+          ) : (
+            <div className="edit-panel">
+              {editingSegments.length > 0 ? (
+                <>
+                  <h2>编辑卡片内容</h2>
+                  <div className="segments-container">
+                    {editingSegments.map((segment, index) => {
+                      let segmentType = "详情页";
+                      if (index === 0) segmentType = "封面页";
+                      if (index === editingSegments.length - 1 && editingSegments.length > 1) segmentType = "结尾页";
+                      
+                      return (
+                        <div key={segment.id} className="segment-card">
+                          <div className="segment-header">
+                            <h3>{segmentType} (卡片 {index + 1})</h3>
+                          </div>
+                          
+                          <div className="segment-form">
+                            <div className="form-group">
+                              <label>页眉</label>
+                              <input 
+                                type="text" 
+                                value={segment.pageHeader} 
+                                onChange={(e) => handleSegmentFieldChange(index, 'pageHeader', e.target.value)} 
+                                placeholder="页眉内容 (可选)" 
+                              />
+                            </div>
+                            
+                            <div className="form-group">
+                              <label>主标题</label>
+                              <input 
+                                type="text" 
+                                value={segment.mainTitle} 
+                                onChange={(e) => handleSegmentFieldChange(index, 'mainTitle', e.target.value)} 
+                                placeholder="主标题" 
+                              />
+                            </div>
+                            
+                            <div className="form-group">
+                              <label>副标题</label>
+                              <input 
+                                type="text" 
+                                value={segment.subtitle} 
+                                onChange={(e) => handleSegmentFieldChange(index, 'subtitle', e.target.value)} 
+                                placeholder="副标题 (可选)" 
+                              />
+                            </div>
+                            
+                            <div className="form-group">
+                              <label>正文</label>
+                              <textarea
+                                value={segment.body}
+                                onChange={(e) => handleSegmentFieldChange(index, 'body', e.target.value)}
+                                placeholder="卡片正文内容..."
+                              />
+                            </div>
+                            
+                            <div className="form-group">
+                              <label>页脚</label>
+                              <input 
+                                type="text" 
+                                value={segment.pageFooter} 
+                                onChange={(e) => handleSegmentFieldChange(index, 'pageFooter', e.target.value)} 
+                                placeholder="页脚内容 (可选)" 
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  
+                  <div className="action-buttons">
+                    <button
+                      className="secondary-button"
+                      onClick={() => setActiveTab('input')}
+                    >
+                      返回编辑文本
+                    </button>
+                    
+                    <button
+                      className="primary-button"
+                      onClick={handleGeneratePreviews}
+                      disabled={isProcessing}
+                    >
+                      {isProcessing ? "处理中..." : "生成卡片预览"}
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <div className="empty-state">
+                  <div className="empty-icon">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M19 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V5C21 3.89543 20.1046 3 19 3Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M12 8V16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M8 12H16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </div>
+                  <p>请先在输入页面粘贴文本内容并拆分</p>
+                  <button
+                    className="secondary-button"
+                    onClick={() => setActiveTab('input')}
+                  >
+                    返回输入文本
+                  </button>
                 </div>
-            )}
-          </div>
-        </div>
-        
-        <hr className="my-12 border-gray-700" /> 
+              )}
+            </div>
+          )}
+        </main>
 
-        <h2 className="font-orbitron text-3xl text-pink-500 text-center mb-6">
-          生成的卡片预览
-        </h2>
-        <ImageGenerator cardsData={cards} onClearCard={handleClearCard} />
-      </main>
-
-      <footer className="text-center mt-12 py-4 border-t border-gray-700">
-        <p className="emphasis-auxiliary">小红书图卡生成工具 - 创造你的专属精彩卡片!</p>
-      </footer>
-    </div>
+        <footer className="app-footer">
+          <p>小红书图卡生成工具 - 创造你的专属精彩卡片</p>
+        </footer>
+      </div>
+    </>
   );
 };
 

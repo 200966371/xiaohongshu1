@@ -10,16 +10,10 @@ class MyDocument extends Document {
     return (
       <Html lang="zh-CN">
         <Head>
-          {/* Google Fonts */}
-          <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono&family=Audiowide&family=Press+Start+2P&family=VT323&family=Roboto+Mono&family=Source+Code+Pro&display=swap" rel="stylesheet" />
-          {/* dom-to-image-more script */}
-          <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image-more/2.9.6/dom-to-image-more.min.js"></script>
-          {/* Tailwind CSS (already linked in your original HTML, ensuring it's here or in _app.js if not using Next.js Tailwind plugin) */}
-          {/* For this example, we'll assume Tailwind is set up via Next.js plugin or CDN link is managed elsewhere if needed. 
-              If you haven't set up Tailwind with Next.js (e.g., via postcss), 
-              you might want to add: <link rel="stylesheet" href="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/tailwindcss/2.2.19/tailwind.min.css" /> 
-              However, it's generally better to integrate Tailwind via the official Next.js guide. 
-              For now, we focus on fonts and dom-to-image-more as per user's initial HTML structure. */}
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image-more/3.5.0/dom-to-image-more.min.js"></script>
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+          <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Roboto:wght@400;500&family=Courier+Prime&family=Dancing+Script&family=Nunito:wght@400;600&family=Noto+Sans+JP:wght@400;500&family=IBM+Plex+Mono&display=swap" rel="stylesheet" />
         </Head>
         <body>
           <Main />

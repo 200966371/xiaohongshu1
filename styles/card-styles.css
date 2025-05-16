@@ -1,0 +1,323 @@
+/* 卡片基础样式 */
+.card-container-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.card {
+  width: 450px;
+  height: 600px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.card-content {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.card-wrapper {
+  margin-bottom: 20px;
+}
+
+/* Apple Notes 风格 */
+.card-style-apple-notes .card {
+  background-color: #ffffff;
+  color: #1d1d1f;
+  border-radius: 8px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.card-style-apple-notes .card-page-header {
+  color: #86868b;
+  font-size: 12px;
+  font-weight: 500;
+  border-bottom: 1px solid #f5f5f7;
+  background-color: #fcfcfc;
+  padding: 12px 16px;
+}
+
+.card-style-apple-notes .card-page-footer {
+  color: #86868b;
+  font-size: 11px;
+  border-top: 1px solid #f5f5f7;
+  background-color: #fcfcfc;
+  padding: 12px 16px;
+  text-align: right;
+}
+
+.card-style-apple-notes .card-content {
+  padding: 16px;
+}
+
+.card-style-apple-notes .card-title {
+  font-weight: 500;
+  color: #1d1d1f;
+  line-height: 1.3;
+}
+
+.card-style-apple-notes blockquote {
+  border-left: 3px solid #dedede;
+  padding-left: 12px;
+  color: #515154;
+  font-style: italic;
+  margin: 8px 0;
+}
+
+.card-style-apple-notes .body-comment {
+  color: #86868b;
+  font-style: italic;
+}
+
+.card-style-apple-notes .inline-code {
+  background-color: #f2f2f7;
+  border-radius: 4px;
+  padding: 2px 5px;
+  font-family: "SF Mono", monospace;
+  font-size: 0.9em;
+  color: #007aff;
+}
+
+/* 赛博朋克风格 */
+.card-style-cyberpunk .card {
+  width: 450px;
+  height: 600px;
+  background-color: #1A1A1A; /* 碳黑 */
+  border: 2px solid #00FFFF; /* 赛博蓝边框 */
+  box-shadow: 0 0 15px #00FFFF, 0 0 25px #00FFFF inset; /* 霓虹光效 */
+  padding: 20px;
+  font-family: 'Roboto Mono', monospace;
+  color: #E0E0E0; /* 冷灰色 */
+}
+
+.card-style-cyberpunk .card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: repeating-linear-gradient(0deg, rgba(0, 255, 255, 0.03), rgba(0, 255, 255, 0.03) 1px, transparent 1px, transparent 3px);
+  pointer-events: none; /* 允许点击穿透 */
+  z-index: 1;
+}
+
+.card-style-cyberpunk .card-content {
+  position: relative; /* 确保内容在扫描线之上 */
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 赛博朋克字体风格 */
+.card-style-cyberpunk .font-orbitron { font-family: 'Orbitron', sans-serif; }
+.card-style-cyberpunk .font-share-tech { font-family: 'Share Tech Mono', monospace; }
+.card-style-cyberpunk .font-audiowide { font-family: 'Audiowide', cursive; }
+.card-style-cyberpunk .font-press-start { font-family: 'Press Start 2P', cursive; }
+.card-style-cyberpunk .font-vt323 { font-family: 'VT323', monospace; }
+
+/* 强调等级 */
+.card-style-cyberpunk .emphasis-core {
+  font-family: 'Orbitron', 'Press Start 2P', sans-serif;
+  font-weight: 700;
+  color: #FF007F; /* 改为更鲜明的深粉色 */
+  text-shadow: 0 0 5px rgba(255, 0, 127, 0.8); /* 调整发光效果，使其更清晰 */
+  animation: text-flicker-core 3s infinite alternate, text-jitter-slight 0.2s infinite alternate;
+}
+
+.card-style-cyberpunk .emphasis-highlight {
+  color: #00FFFF; /* 赛博蓝 */
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.card-style-cyberpunk .emphasis-highlight-alt {
+  color: #FFA500; /* 亮橙色 */
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.card-style-cyberpunk .emphasis-auxiliary {
+  font-family: 'VT323', 'Roboto Mono', monospace;
+  color: #7F8C8D; /* 冷灰色 */
+  font-size: 0.9em;
+}
+
+.card-style-cyberpunk .emphasis-auxiliary::before {
+  content: '> ';
+  color: #39FF14; /* 荧光绿 */
+}
+
+/* 故障艺术效果 */
+@keyframes text-flicker-core {
+  0%, 18%, 22%, 25%, 53%, 57%, 100% { text-shadow: 0 0 4px #FF00FF, 0 0 10px #FF00FF, 0 0 1px #fff; opacity: 1; }
+  20%, 24%, 55% { text-shadow: none; opacity: 0.7; }
+}
+
+@keyframes text-jitter-slight {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(0.5px, -0.5px); }
+  50% { transform: translate(-0.5px, 0.5px); }
+  75% { transform: translate(0.5px, 0.5px); }
+  100% { transform: translate(-0.5px, -0.5px); }
+}
+
+.card-style-cyberpunk .card-page-header {
+  color: #00FFFF; /* 赛博蓝 */
+  font-size: 0.8em;
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 10px 15px;
+  /* 移除黑色背景，使页眉页脚与卡片主体背景一致 */
+  background-color: transparent;
+  border-bottom: 1px solid #00FFFF; /* 添加底部分割线 */
+}
+
+.card-style-cyberpunk .card-page-footer {
+  color: #00FFFF; /* 赛博蓝 */
+  font-size: 0.8em;
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 10px 15px;
+  background-color: transparent;
+  border-top: 1px solid #00FFFF; /* 添加顶部分割线 */
+}
+
+.card-style-cyberpunk .card-page-footer {
+  text-align: right;
+  /* 页脚的其他样式已在上面定义，这里只保留文本对齐 */
+}
+
+.card-style-cyberpunk .card-title {
+  color: #FF00FF; /* 霓虹粉 */
+  font-size: 1.8em;
+  font-weight: bold;
+  text-shadow: 0 0 5px #FF00FF;
+  margin-bottom: 15px;
+  word-break: break-all;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.card-style-cyberpunk .card-body {
+  flex-grow: 1;
+  overflow-y: auto; /* 内容过多时允许滚动 */
+  font-size: 1em;
+  line-height: 1.6;
+}
+
+.card-style-cyberpunk .card-body p, 
+.card-style-cyberpunk .card-body li {
+  color: #E0E0E0;
+  margin-bottom: 10px;
+}
+
+.card-style-cyberpunk blockquote {
+  border-left: 3px solid #FF00FF; /* 霓虹粉 */
+  padding-left: 12px;
+  color: #FFA500; /* 亮橙色 */
+  background-color: transparent; /* 移除背景色 */
+  margin: 10px 0;
+}
+
+.card-style-cyberpunk .body-comment {
+  color: #39FF14; /* 荧光绿 */
+  font-size: 1.05em;
+  font-family: 'Share Tech Mono', monospace;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 5px rgba(57, 255, 20, 0.7);
+}
+
+/* 之前计划在这里添加前缀，但发现组件代码中已经去掉了前缀，所以不需要在这里添加 */
+
+.card-style-cyberpunk .inline-code {
+  background-color: rgba(0, 255, 255, 0.1); /* 极轻微的赛博蓝背景，几乎不可见 */
+  color: #00FFFF; /* 赛博蓝文字 */
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  padding: 2px 5px;
+  border-radius: 3px;
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+}
+
+/* 滚动条样式 */
+.card-style-cyberpunk .card-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.card-style-cyberpunk .card-body::-webkit-scrollbar-track {
+  background: #1A1A1A;
+}
+
+.card-style-cyberpunk .card-body::-webkit-scrollbar-thumb {
+  background-color: #00FFFF;
+  border-radius: 3px;
+  border: 1px solid #1A1A1A;
+}
+
+/* 少女手账本风格 */
+.card-style-girly-journal .card {
+  background-color: #fff0f5;
+  border: 2px dashed #ffb6c1;
+  box-shadow: 0 0 8px rgba(255, 182, 193, 0.5);
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', sans-serif;
+  color: #774d8e;
+  border-radius: 10px;
+}
+
+.card-style-girly-journal .card-page-header,
+.card-style-girly-journal .card-page-footer {
+  color: #c77e8f;
+  border-color: #ffc0cb;
+  font-size: 0.9em;
+  font-style: italic;
+  padding: 8px 15px;
+  text-align: center;
+  background-color: rgba(255, 240, 245, 0.8);
+}
+
+.card-style-girly-journal .card-title {
+  font-family: 'Pacifico', 'Comic Sans MS', cursive;
+  font-weight: normal;
+  color: #d96d8a;
+  font-size: 1.7em;
+  text-shadow: 1px 1px 2px #ffffff;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.card-style-girly-journal .card-body p {
+  color: #774d8e;
+  font-size: 1em;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+.card-style-girly-journal blockquote {
+  border-left: 3px dotted #ffb6c1;
+  color: #9b72aa;
+  background-color: rgba(255, 240, 245, 0.5);
+  padding: 0.5em 1em;
+  border-radius: 5px;
+  margin: 10px 0;
+}
+
+.card-style-girly-journal .body-comment {
+  color: #b08bbb;
+  font-style: italic;
+  text-align: center;
+}
+
+.card-style-girly-journal .inline-code {
+  background-color: rgba(255, 182, 193, 0.3);
+  color: #c71585;
+  border-radius: 5px;
+  padding: 2px 5px;
+  font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+} 
